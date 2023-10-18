@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        BigInt      @id @default(autoincrement())
+  firstName String
+  middleName String
+  lastName  String
+  mobile    String
+  email     String   @unique
+  password  String
+  admin     Boolean  @default(false)
+  registeredat DateTime @default(now())
+  lastlogin  DateTime @default(now())
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+  cart   Cart?
+  product Product[]
+  order  Order[]
+}
+
+model Product {
+  id        BigInt      @id @default(autoincrement())
+  firstName String
+  metaTitle String
+  slug      String
+  summary   String
+  price     Int
+  discount  Int
+  publishedat DateTime @default(now())
+  startdate DateTime @default(now())
+  enddate DateTime @default(now())
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+  meta      Product_meta[]
+  review    Product_review[]
+   userId    BigInt      @unique
+  user      User? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  
+}
+
+model Cart {
+  id        BigInt      @id @default(autoincrement())
+  title     String
+  sessionId String
+  token     String
+  status    String
+  firstName String
+  middleName String
+  lastName  String
+  mobile    String
+  email     String
+  city      String
+  country   String
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+  userId    BigInt      @unique
+  user      User? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
+}
+
+model Order{
+  id        BigInt      @id @default(autoincrement())
+  title     String
+  token     String
+  subTotal  Int
+  itemDiscount  Int
+  tax  Int
+  total  Int
+  discount  Int
+  grandTotal  Int
+  firstName String
+  middleName String
+  lastName  String
+  mobile    String
+  email     String
+  city      String
+  country   String
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+    userId    BigInt      @unique
+  user      User? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Product_meta {
+  id        BigInt      @id @default(autoincrement())
+  key       String
+  content   String
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+  productId BigInt      @unique
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Product_review {
+  id        BigInt      @id @default(autoincrement())
+  title     String
+  rating    Int
+  content   String
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+  productId BigInt      @unique
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Category {
+  id        BigInt      @id @default(autoincrement())
+  title     String
+  slug      String
+  content   String
+  createdat  DateTime @default(now())
+  updatedat  DateTime @default(now())
+}
